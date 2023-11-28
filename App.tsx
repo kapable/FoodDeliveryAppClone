@@ -25,7 +25,7 @@ const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App() {
-  const [isLoggedIn, setLoggedIn] = useState(false);
+  const [isLoggedIn] = useState(false);
   return (
     <NavigationContainer>
       {isLoggedIn ? (
