@@ -1,4 +1,5 @@
-import React, {useCallback, useState} from 'react';
+import {NativeStackScreenProps} from '@react-navigation/native-stack';
+import React, {useCallback, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -7,10 +8,14 @@ import {
   Pressable,
   StyleSheet,
 } from 'react-native';
+import {RootStackParamList} from '../../App';
+type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
-export default function SignIn() {
+export default function SignIn({navigation}: SignInScreenProps) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const emailRef = useRef<TextInput | null>(null);
+  const passwordRef = useRef<TextInput | null>(null);
 
   const onChangeEmail = useCallback((text: string): void => {
     setEmail(text);
@@ -20,8 +25,18 @@ export default function SignIn() {
   }, []);
 
   const onSubmit = useCallback(() => {
-    Alert.alert('알림', '안뇽');
-  }, []);
+    if (!email || !email.trim()) {
+      return Alert.alert('알림', '이메일을 입력해주세요.');
+    }
+    if (!password || !password.trim()) {
+      return Alert.alert('알림', '비밀번호를 입력해주세요.');
+    }
+    Alert.alert('알림', '로그인 되었습니다.');
+  }, [email, password]);
+
+  const toSignUp = useCallback(() => {
+    navigation.navigate('SignUp');
+  }, [navigation]);
   const canGoNext = email && password;
   return (
     <View>
@@ -31,6 +46,18 @@ export default function SignIn() {
           style={styles.textInput}
           placeholder="이메일을 입력해주세요."
           onChangeText={onChangeEmail}
+          value={email}
+          keyboardType="email-address"
+          importantForAutofill="yes"
+          autoComplete="email"
+          textContentType="emailAddress"
+          returnKeyType="next"
+          ref={emailRef}
+          onSubmitEditing={() => {
+            passwordRef.current?.focus();
+          }}
+          blurOnSubmit={false}
+          clearButtonMode="while-editing"
         />
       </View>
       <View style={styles.inputWrapper}>
@@ -39,6 +66,13 @@ export default function SignIn() {
           style={styles.textInput}
           placeholder="비밀번호를 입력해주세요."
           onChangeText={onChangePassword}
+          value={password}
+          importantForAutofill="yes"
+          autoComplete="password"
+          textContentType="password"
+          secureTextEntry
+          ref={passwordRef}
+          onSubmitEditing={onSubmit}
         />
       </View>
       <View style={styles.buttonZone}>
@@ -52,7 +86,7 @@ export default function SignIn() {
           disabled={!canGoNext}>
           <Text style={styles.loginButtonText}>로그인</Text>
         </Pressable>
-        <Pressable>
+        <Pressable onPress={toSignUp}>
           <Text>회원가입</Text>
         </Pressable>
       </View>
