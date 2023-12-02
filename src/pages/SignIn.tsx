@@ -14,7 +14,7 @@ import {useAppDispatch} from '../store';
 import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import userSlice from '../slices/user';
-import EncryptedStorage from 'react-native-encrypted-storage/lib/typescript/EncryptedStorage';
+import EncryptedStorage from 'react-native-encrypted-storage';
 type SignInScreenProps = NativeStackScreenProps<RootStackParamList, 'SignIn'>;
 
 export default function SignIn({navigation}: SignInScreenProps) {
@@ -51,7 +51,7 @@ export default function SignIn({navigation}: SignInScreenProps) {
       Alert.alert('알림', '로그인 되었습니다.');
       dispatch(
         userSlice.actions.setUser({
-          name: response.data.data.name,
+          email: response.data.data.email,
           password: response.data.data.password,
           accessToken: response.data.data.accessToken,
         }),

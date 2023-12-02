@@ -1,4 +1,5 @@
 import * as React from 'react';
+import {useEffect} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
@@ -10,12 +11,34 @@ import SignUp from './src/pages/SignUp';
 import {useSelector} from 'react-redux';
 import {RootState} from './src/store/reducer';
 import {RootStackParamList} from './App';
+import useSocket from './src/hooks/useSocket';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function AppInner() {
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
+
+  const [socket, disconnect] = useSocket();
+  useEffect(() => {
+    const helloCallback = (data: any) => {
+      console.log(data);
+    };
+    if (socket && isLoggedIn) {
+      socket.emit('login', 'hello');
+      socket.on('hello', helloCallback);
+    }
+    return () => {
+      if (socket) {
+        socket.off('hello', helloCallback);
+      }
+    };
+  }, [socket, isLoggedIn]);
+  useEffect(() => {
+    if (!isLoggedIn) {
+      disconnect();
+    }
+  }, [disconnect, isLoggedIn]);
   return (
     <NavigationContainer>
       {isLoggedIn ? (
