@@ -18,6 +18,7 @@ import axios, {AxiosError} from 'axios';
 import Config from 'react-native-config';
 import userSlice from './src/slices/user';
 import {Alert} from 'react-native';
+import orderSlice from './src/slices/order';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -29,7 +30,7 @@ function AppInner() {
   useEffect(() => {
     const callback = (data: any) => {
       console.log(data);
-      // dispatch(orderSlice)
+      dispatch(orderSlice.actions.addOrder(data));
     };
     if (socket && isLoggedIn) {
       socket.emit('acceptOrder', 'hello');
