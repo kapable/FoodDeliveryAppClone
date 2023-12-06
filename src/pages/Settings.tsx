@@ -9,6 +9,8 @@ import userSlice from '../slices/user';
 import EncryptedStorage from 'react-native-encrypted-storage';
 
 export default function Settings() {
+  const money = useSelector((state: RootState) => state.user.money);
+  const name = useSelector((state: RootState) => state.user.name);
   const dispatch = useAppDispatch();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
   const onLogout = useCallback(async () => {
@@ -38,6 +40,13 @@ export default function Settings() {
   }, [dispatch, accessToken]);
   return (
     <View>
+      <View style={styles.money}>
+        <Text style={styles.moneyText}>
+          {name}님의 수익금{' '}
+          <Text>{money.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',')}</Text>
+          원
+        </Text>
+      </View>
       <View style={styles.buttonZone}>
         <Pressable
           style={StyleSheet.compose(
@@ -47,12 +56,15 @@ export default function Settings() {
           onPress={onLogout}>
           <Text style={styles.loginButtonText}>로그아웃</Text>
         </Pressable>
+        V
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  money: {padding: 20},
+  moneyText: {fontSize: 16},
   buttonZone: {
     alignItems: 'center',
     padding: 20,
