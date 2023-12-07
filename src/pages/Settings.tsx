@@ -1,5 +1,5 @@
 import axios, {AxiosError} from 'axios';
-import React, {useCallback} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import {View, Text, StyleSheet, Pressable, Alert} from 'react-native';
 import Config from 'react-native-config';
 import {useAppDispatch} from '../store';
@@ -13,6 +13,21 @@ export default function Settings() {
   const name = useSelector((state: RootState) => state.user.name);
   const dispatch = useAppDispatch();
   const accessToken = useSelector((state: RootState) => state.user.accessToken);
+
+  useEffect(() => {
+    async function getMoney() {
+      const response = await axios.get<{data: number}>(
+        `${Config.DEV_API_URL}/showmethemoney`,
+        {
+          headers: {
+            autorization: `Bearer ${accessToken}`,
+          },
+        },
+      );
+      dispatch(userSlice.actions.setMoney(response.data.data));
+    }
+    getMoney();
+  }, [accessToken, dispatch]);
   const onLogout = useCallback(async () => {
     try {
       await axios.post(
@@ -56,7 +71,6 @@ export default function Settings() {
           onPress={onLogout}>
           <Text style={styles.loginButtonText}>로그아웃</Text>
         </Pressable>
-        V
       </View>
     </View>
   );
