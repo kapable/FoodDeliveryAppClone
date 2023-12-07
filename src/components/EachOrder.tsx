@@ -27,6 +27,7 @@ function EachOrder({item}: {item: Order}) {
         {headers: {authorization: `Bearer ${accessToken}`}},
       );
       dispatch(orderSlice.actions.acceptOrder(item.orderId));
+      setLoading(true);
       navigation.navigate('Delivery');
     } catch (error) {
       let errorResponse = (error as AxiosError).response;
@@ -34,8 +35,9 @@ function EachOrder({item}: {item: Order}) {
         Alert.alert('알림', (errorResponse.data as any).message);
         dispatch(orderSlice.actions.rejectOrder(item.orderId));
       }
-    } finally {
+      setLoading(true);
     }
+    dispatch(orderSlice.actions.acceptOrder(item.orderId));
   }, [dispatch, item.orderId, accessToken, navigation]);
   const onReject = useCallback(() => {
     dispatch(orderSlice.actions.rejectOrder(item.orderId));

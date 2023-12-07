@@ -28,6 +28,32 @@ function AppInner() {
   const dispatch = useAppDispatch();
   const [socket, disconnect] = useSocket();
   useEffect(() => {
+    axios.interceptors.request.use(
+      response => response,
+      async error => {
+        const {
+          config,
+          response: {status},
+        } = error;
+        if (status === 419) {
+          if (error.response.data.code === 'expired') {
+            const originalRequest = config;
+            const refreshToken = await EncryptedStorage.getItem('refreshToken');
+            const {data} = await axios.post(
+              `${Config.DEV_API_URL}/refreshToken`,
+              {},
+              {headers: {authorization: `Bearer ${refreshToken}`}},
+            );
+            dispatch(userSlice.actions.setAccessToken(data.data.accessToken));
+            originalRequest.headers.authorization = `Bearer ${data.data.accessToken}`;
+            return axios(originalRequest);
+          }
+        }
+        return Promise.reject(error);
+      },
+    );
+  }, [dispatch]);
+  useEffect(() => {
     const callback = (data: Order) => {
       console.log(data);
       dispatch(orderSlice.actions.addOrder(data));
