@@ -1,4 +1,4 @@
-package com.fooddeliveryappclone;
+package com.beseeyong.fooddeliveryappclone;
 
 import com.facebook.react.ReactActivity;
 import com.facebook.react.ReactActivityDelegate;

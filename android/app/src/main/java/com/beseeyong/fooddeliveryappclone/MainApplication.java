@@ -1,4 +1,4 @@
-package com.fooddeliveryappclone;
+package com.beseeyong.fooddeliveryappclone;
 
 import android.app.Application;
 import com.facebook.react.PackageList;
