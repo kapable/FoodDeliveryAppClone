@@ -17,6 +17,7 @@ function usePermissions() {
                 {
                   text: '네',
                   onPress: () => Linking.openSettings(),
+                  style: 'default',
                 },
                 {
                   text: '아니오',
@@ -39,6 +40,7 @@ function usePermissions() {
                 {
                   text: '네',
                   onPress: () => Linking.openSettings(),
+                  style: 'default',
                 },
                 {
                   text: '아니오',
@@ -62,7 +64,7 @@ function usePermissions() {
           }
         })
         .catch(console.error);
-    } else {
+    } else if (Platform.OS === 'ios') {
       check(PERMISSIONS.IOS.CAMERA)
         .then(result => {
           if (
