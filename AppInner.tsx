@@ -19,6 +19,7 @@ import Config from 'react-native-config';
 import userSlice from './src/slices/user';
 import {Alert} from 'react-native';
 import orderSlice, {Order} from './src/slices/order';
+import usePermissions from './src/hooks/usePermissions';
 
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -27,6 +28,9 @@ function AppInner() {
   const isLoggedIn = useSelector((state: RootState) => !!state.user.email);
   const dispatch = useAppDispatch();
   const [socket, disconnect] = useSocket();
+
+  usePermissions();
+
   useEffect(() => {
     axios.interceptors.request.use(
       response => response,
