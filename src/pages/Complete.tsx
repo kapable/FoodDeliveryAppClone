@@ -3,6 +3,7 @@ import {
   Alert,
   Dimensions,
   Image,
+  Platform,
   Pressable,
   StyleSheet,
   Text,
@@ -50,13 +51,13 @@ function Complete() {
       response.mime.includes('jpeg') ? 'JPEG' : 'PNG',
       100,
       0,
-    ).then(r => {
+    ).then((r: any) => {
       console.log(r.uri, r.name);
 
       setImage({
-        uri: r.uri,
         name: r.name,
         type: response.mime,
+        uri: Platform.OS === 'android' ? r.uri : r.uri.replace('file://', ''),
       });
     });
   }, []);
@@ -95,10 +96,13 @@ function Complete() {
     formData.append('image', image);
     formData.append('orderId', orderId);
     try {
-      await axios.post(`${Config.API_URL}/complete`, formData, {
+      await axios.post(`${Config.DEV_API_URL}/complete`, formData, {
         headers: {
           authorization: `Bearer ${accessToken}`,
+          'Content-Type': 'multipart/form-data',
         },
+        // eslint-disable-next-line @typescript-eslint/no-shadow
+        transformRequest: formData => formData,
       });
       Alert.alert('알림', '완료처리 되었습니다.');
       navigation.goBack();
