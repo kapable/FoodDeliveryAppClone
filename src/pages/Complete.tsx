@@ -1,4 +1,4 @@
-import React, {useCallback, useState} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {
   Alert,
   Dimensions,
@@ -98,7 +98,7 @@ function Complete() {
     try {
       await axios.post(`${Config.DEV_API_URL}/complete`, formData, {
         headers: {
-          authorization: `Bearer ${accessToken}`,
+          authorization: `Bearer ${accessToken as string}`,
           'Content-Type': 'multipart/form-data',
         },
         // eslint-disable-next-line @typescript-eslint/no-shadow
@@ -111,10 +111,18 @@ function Complete() {
     } catch (error) {
       const errorResponse: any = (error as AxiosError).response;
       if (errorResponse) {
-        Alert.alert('알림', errorResponse.data.message);
+        Alert.alert(
+          '알림',
+          'NAAA',
+          // errorResponse.data.message
+        );
       }
     }
   }, [dispatch, navigation, image, orderId, accessToken]);
+
+  useEffect(() => {
+    console.log('ACCESS TOKEN', accessToken);
+  }, [accessToken]);
 
   return (
     <View>

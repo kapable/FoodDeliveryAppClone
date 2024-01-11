@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
+    "postinstall": "patch-package",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
     "lint": "eslint .",
@@ -18,7 +19,8 @@
     "@reduxjs/toolkit": "^1.9.7",
     "@types/axios": "^0.14.0",
     "@types/react-redux": "^7.1.31",
-    "axios": "^0.27.2",
+    "axios": "^1.6.5",
+    "patch-package": "^8.0.0",
     "react": "18.2.0",
     "react-native": "0.71.2",
     "react-native-config": "^1.5.1",
